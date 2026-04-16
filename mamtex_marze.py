@@ -48,7 +48,7 @@ def spocitej_marzi(produkty):
     vysledky = []
     for p in produkty:
         nakupni = parse_cenu(p.get('purchasePrice', '0'))
-        prodejni = parse_cenu(p.get('price', '0'))
+        prodejni = parse_cenu(p.get('standardPrice', '0'))
         marze_kc = prodejni - nakupni
         marze_procent = ((prodejni - nakupni) / prodejni * 100) if prodejni > 0 else 0
         multishop = zaokrouhli_na_5(marze_procent)
