@@ -35,13 +35,7 @@ def parse_cenu(hodnota):
 
 
 def zaokrouhli_na_5(hodnota):
-    zbytek = hodnota % 5
-    if zbytek == 0:
-        return int(hodnota)
-    elif zbytek == 1:
-        return int(hodnota - 1)
-    else:
-        return int(hodnota + (5 - zbytek))
+    return int(round(hodnota / 5) * 5)
 
 
 def spocitej_marzi(produkty):
