@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stoklasa Ceny - Jak to funguje</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f4f6f9; color: #333; padding: 30px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; }
+        .subtitle { color: #7f8c8d; margin-bottom: 40px; }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 50px;
+        }
+        .box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 160px;
+        }
+        .box .icon { font-size: 36px; margin-bottom: 8px; }
+        .box .label { font-weight: bold; font-size: 14px; color: #2c3e50; }
+        .box .desc { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
+        .arrow { font-size: 28px; color: #3498db; }
+
+        .section { margin-bottom: 40px; }
+        .section h2 { color: #2c3e50; border-left: 4px solid #3498db; padding-left: 12px; margin-bottom: 20px; }
+
+        .cards { display: flex; flex-wrap: wrap; gap: 20px; }
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            flex: 1;
+            min-width: 220px;
+        }
+        .card h3 { color: #3498db; margin-bottom: 10px; font-size: 15px; }
+        .card p, .card li { font-size: 13px; color: #555; line-height: 1.7; }
+        .card ul { padding-left: 18px; }
+
+        table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        th { background: #3498db; color: #fff; padding: 12px 15px; text-align: left; font-size: 13px; }
+        td { padding: 11px 15px; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8f9fa; }
+
+        .formula {
+            background: #eaf4ff;
+            border: 1px solid #b3d7f7;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+
+        .timeline { list-style: none; padding: 0; }
+        .timeline li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        .timeline .dot {
+            width: 32px; height: 32px;
+            background: #3498db;
+            border-radius: 50%;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .timeline .text { padding-top: 5px; font-size: 13px; color: #555; line-height: 1.6; }
+        .timeline .text strong { color: #2c3e50; }
+
+        .url-box {
+            background: #2c3e50;
+            color: #2ecc71;
+            font-family: monospace;
+            font-size: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #2ecc71;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Stoklasa Ceny <span class="badge">automaticky</span></h1>
+    <p class="subtitle">Automatický výpočet marží produktů z Mamtex.cz a export pro Napojse.cz</p>
+
+    <!-- FLOW -->
+    <div class="section">
+        <h2>Jak to celé funguje</h2>
+        <div class="flow">
+            <div class="box">
+                <div class="icon">🏭</div>
+                <div class="label">Mamtex.cz</div>
+                <div class="desc">Zdrojový feed<br>produktů (CSV)</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="box">
+                <div class="icon">🐍</div>
+                <div class="label">mamtex_marze.py</div>
+                <div class="desc">Python skript<br>výpočet marží</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="box">
+                <div class="icon">📄</div>
+                <div class="label">marze_export.csv</div>
+                <div class="desc">Výstupní soubor<br>s maržemi</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="box">
+                <div class="icon">🐙</div>
+                <div class="label">GitHub</div>
+                <div class="desc">Uložení a<br>publikace feedu</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="box">
+                <div class="icon">🛒</div>
+                <div class="label">Napojse.cz</div>
+                <div class="desc">Čte výstupní<br>feed každý den</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTOMATIZACE -->
+    <div class="section">
+        <h2>Automatizace — GitHub Actions</h2>
+        <ul class="timeline">
+            <li>
+                <div class="dot">1</div>
+                <div class="text"><strong>Každý den v 9:00 SEČ</strong> se automaticky spustí GitHub Actions workflow (<code>update.yml</code>)</div>
+            </li>
+            <li>
+                <div class="dot">2</div>
+                <div class="text"><strong>Skript stáhne</strong> aktuální ceník z Mamtex.cz (přes zabezpečenou URL s hashem)</div>
+            </li>
+            <li>
+                <div class="dot">3</div>
+                <div class="text"><strong>Vypočítá marže</strong> pro každý produkt a uloží výsledek do <code>marze_export.csv</code></div>
+            </li>
+            <li>
+                <div class="dot">4</div>
+                <div class="text"><strong>Commitne a pushne</strong> změněný soubor na GitHub s názvem commitu <code>Aktualizace YYYY-MM-DD</code></div>
+            </li>
+            <li>
+                <div class="dot">5</div>
+                <div class="text"><strong>Feed je dostupný</strong> na raw GitHub URL — Napojse.cz si ho přečte</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- VÝPOČET -->
+    <div class="section">
+        <h2>Výpočet marže</h2>
+        <div class="cards">
+            <div class="card">
+                <h3>Vstupní sloupce z Mamtexu</h3>
+                <ul>
+                    <li><strong>purchasePrice</strong> — nákupní cena</li>
+                    <li><strong>standardPrice</strong> — prodejní cena</li>
+                    <li><strong>code</strong> — kód produktu</li>
+                    <li><strong>name</strong> — název produktu</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Vzorce</h3>
+                <div class="formula">
+                    Marže Kč = standardPrice − purchasePrice<br><br>
+                    Marže % = (Marže Kč / standardPrice) × 100<br><br>
+                    Multishop = Marže % zaokrouhlená na 5
+                </div>
+            </div>
+            <div class="card">
+                <h3>Zaokrouhlení Multishop</h3>
+                <ul>
+                    <li>27% → <strong>25%</strong> (dolů — zbytek 2)</li>
+                    <li>28% → <strong>30%</strong> (nahoru — zbytek 3)</li>
+                    <li>51% → <strong>50%</strong> (dolů — zbytek 1)</li>
+                    <li>53% → <strong>55%</strong> (nahoru — zbytek 3)</li>
+                </ul>
+                <p style="margin-top:8px;">Pravidlo: standardní zaokrouhlení na nejbližší násobek 5 (zbytek 0–2 → dolů, zbytek 3–4 → nahoru).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VÝSTUPNÍ SLOUPCE -->
+    <div class="section">
+        <h2>Výstupní sloupce (marze_export.csv)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sloupec</th>
+                    <th>Popis</th>
+                    <th>Příklad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Kód produktu</td><td>Kód z Mamtex feedu</td><td>124080/235433</td></tr>
+                <tr><td>Název</td><td>Název produktu</td><td>ABS gumová protiskluz + šablony</td></tr>
+                <tr><td>Nákupní cena</td><td>Cena od dodavatele (Kč)</td><td>316.90</td></tr>
+                <tr><td>Prodejní cena</td><td>standardPrice z feedu (Kč)</td><td>387.32</td></tr>
+                <tr><td>Marže Kč</td><td>Prodejní − Nákupní</td><td>70.42</td></tr>
+                <tr><td>Marže %</td><td>Marže v procentech</td><td>18.18</td></tr>
+                <tr><td>Multishop</td><td>Marže % zaokrouhlená na 5</td><td>20</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- URL -->
+    <div class="section">
+        <h2>URL výstupního feedu</h2>
+        <div class="card" style="max-width: 700px;">
+            <h3>Feed pro Napojse.cz</h3>
+            <div class="url-box">https://raw.githubusercontent.com/marach1994/stoklasa-ceny2/main/marze_export.csv</div>
+            <p style="margin-top:12px;">Soubor se aktualizuje každý den automaticky. Vždy obsahuje aktuální data.</p>
+        </div>
+    </div>
+
+</body>
+</html>
