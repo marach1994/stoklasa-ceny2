@@ -1,3 +1,4 @@
+import os
 import urllib.request
 import ssl
 import csv
@@ -5,7 +6,9 @@ import io
 import time
 from datetime import datetime
 
-URL = 'https://www.mamtex.cz/export/products.csv?patternId=279&partnerId=8&hash=98f603114b86c6b8be3cc9563c71ce983ce16ff98eb32df69d8cb32b73ada2ba&supplierId=316'
+# Celá URL exportu (vč. hashe) je v GitHub Secret MAMTEX_FEED_URL – nikdy ji necommitovat,
+# repo je veřejné. Lokálně: nastav proměnnou prostředí MAMTEX_FEED_URL.
+URL = os.environ.get('MAMTEX_FEED_URL', '')
 OUTPUT_FILE = 'marze_export.csv'
 
 
@@ -69,6 +72,8 @@ def uloz_csv(vysledky, soubor):
 
 
 def main():
+    if not URL:
+        raise SystemExit('Chybí proměnná prostředí MAMTEX_FEED_URL')
     print(f"[{datetime.now()}] Stahuji CSV z mamtex.cz...")
     obsah = stahni_csv(URL)
     reader = csv.DictReader(io.StringIO(obsah), delimiter=';')

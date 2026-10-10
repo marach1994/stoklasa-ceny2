@@ -39,9 +39,9 @@ https://raw.githubusercontent.com/marach1994/stoklasa-ceny2/main/marze_export.cs
 ```
 
 ## Zdrojový feed (Mamtex)
-```
-https://www.mamtex.cz/export/products.csv?patternId=279&partnerId=8&hash=98f603114b86c6b8be3cc9563c71ce983ce16ff98eb32df69d8cb32b73ada2ba&supplierId=316
-```
+URL exportu (včetně hashe) je uložená v GitHub Secret `MAMTEX_FEED_URL`
+(Settings → Secrets and variables → Actions). Do repa ji **nikdy** nepiš – repo je veřejné.
+Pro lokální spuštění ji nastav jako proměnnou prostředí `MAMTEX_FEED_URL`.
 
 ## Automatická aktualizace
 - **Kdy:** Každý den v 7:00 CET (6:00 UTC)
